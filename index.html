@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>115年公務人員普通考試 - 政治學概要線上測驗與評量系統</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Chart.js for Teacher Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f8fafc;
+    }
+    .gradient-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 3px;
+    }
+    @media print {
+      header, button, .no-print { display: none !important; }
+      body { background-color: white !important; }
+    }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- Top Navigation Header -->
+  <header class="gradient-header text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="app.navToHome()">
+        <div class="bg-blue-500/20 p-2 rounded-xl border border-blue-400/30">
+          <i class="fa-solid fa-landmark text-2xl text-blue-300"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-wide">115年國家普考政治學概要</h1>
+          <p class="text-xs text-slate-300">線上測驗與成績統計檢討系統_銘傳大學公共事務與行政管理學系_劉祥得建置</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span id="sync-badge" class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-200 border border-emerald-500/30">
+          <i class="fa-solid fa-cloud-check mr-1.5"></i>系統正常運作
+        </span>
+        <button onclick="app.toggleAdminModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-medium bg-white/10 hover:bg-white/20 border border-white/20 transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>教師後台</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+
+    <!-- VIEW 1: STUDENT LOGIN / REGISTRATION -->
+    <div id="view-login" class="max-w-xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mt-4 transition-all">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+          <i class="fa-solid fa-file-pen text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-900">學生線上模擬測驗</h2>
+        <p class="text-slate-500 text-sm mt-1">請輸入您的基本資料開始作答，成績將即時統計給老師</p>
+      </div>
+
+      <form onsubmit="app.startQuiz(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">學生姓名 <span class="text-rose-500">*</span></label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+              <i class="fa-solid fa-user"></i>
+            </span>
+            <input type="text" id="input-student-name" required placeholder="請輸入您的姓名（例如：王小明）" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm outline-none transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1.5">學號 / 座號 <span class="text-rose-500">*</span></label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+              <i class="fa-solid fa-id-card"></i>
+            </span>
+            <input type="text" id="input-student-id" required placeholder="請輸入學號或座號（例如：115001）" class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm outline-none transition">
+          </div>
+        </div>
+
+        <div class="bg-blue-50/70 rounded-xl p-4 border border-blue-100 text-xs text-blue-900 space-y-1.5">
+          <div class="font-semibold flex items-center text-blue-800">
+            <i class="fa-solid fa-circle-info mr-1.5"></i> 測驗規則說明：
+          </div>
+          <p>• 本試卷收錄 <strong>115 年公務人員普通考試《政治學概要》全套 25 題單選題</strong>。</p>
+          <p>• 每題配分 4 分，總分 100 分。滿分以 100 分計。</p>
+          <p>• 提交交卷後，系統會立即顯示成績並為您自動核對標準答案與關鍵解析。</p>
+        </div>
+
+        <button type="submit" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition duration-200 flex items-center justify-center space-x-2 text-sm">
+          <span>開始進入作答</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+
+    <!-- VIEW 2: ACTIVE QUIZ -->
+    <div id="view-quiz" class="hidden space-y-6">
+      <!-- Quiz Header & Progress Bar -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+          <div class="flex items-center space-x-3">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold" id="quiz-user-badge">
+              <i class="fa-solid fa-user-graduate mr-1"></i> --
+            </span>
+            <span class="text-xs text-slate-500">已完成 <strong class="text-slate-800" id="quiz-answered-count">0</strong> / 25 題</span>
+          </div>
+          <div class="flex items-center space-x-2 text-xs font-semibold text-slate-600">
+            <i class="fa-regular fa-clock text-blue-600"></i>
+            <span>作答時間：<span id="quiz-timer" class="font-mono text-sm text-slate-800">00:00</span></span>
+          </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+          <div id="quiz-progress-bar" class="bg-blue-600 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Main Layout Grid: Questions + Quick Jump Navigation -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Question Cards Container -->
+        <div class="lg:col-span-3 space-y-6">
+          <div id="quiz-card" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
+            <!-- Question Header -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-2.5 py-1 rounded-md" id="q-category">題目 1 / 25</span>
+                <span class="text-xs text-slate-400 font-medium">單選題 • 4 分</span>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 leading-snug" id="q-title">載入題庫中...</h3>
+            </div>
+
+            <!-- Options Form -->
+            <div id="q-options" class="space-y-3">
+              <!-- Options rendered via JS -->
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+              <button onclick="app.prevQuestion()" id="btn-prev-q" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-50 text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-left mr-1"></i> 上一題
+              </button>
+              <button onclick="app.nextQuestion()" id="btn-next-q" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition">
+                下一題 <i class="fa-solid fa-chevron-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Palette: Question Jump Grid -->
+        <div class="lg:col-span-1 space-y-4">
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+            <h4 class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center justify-between">
+              <span>題目快捷導覽卡</span>
+              <i class="fa-solid fa-border-all text-slate-400"></i>
+            </h4>
+            <div id="question-palette" class="grid grid-cols-5 gap-1.5">
+              <!-- 25 palette buttons dynamically inserted -->
+            </div>
+            <div class="pt-3 border-t border-slate-100">
+              <button onclick="app.confirmSubmitQuiz()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs shadow transition flex items-center justify-center space-x-1.5">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>確認完成並交卷</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: QUIZ RESULT & DETAILED ANSWER REVIEW -->
+    <div id="view-result" class="hidden space-y-6">
+      <!-- Score Overview Header -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 text-center relative overflow-hidden">
+        <div class="max-w-md mx-auto space-y-4">
+          <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-50 border-4 border-blue-100 text-blue-600 mb-1">
+            <span class="text-4xl font-black" id="res-score-number">0</span>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900" id="res-student-heading">測驗結束！</h2>
+            <p class="text-xs text-slate-500 mt-1">115年普通考試政治學概要對照報告</p>
+          </div>
+          
+          <!-- Summary Metrics -->
+          <div class="grid grid-cols-3 gap-2 pt-2">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="text-xs text-slate-500">答對題數</div>
+              <div class="text-base font-bold text-emerald-600" id="res-correct-count">0 / 25</div>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="text-xs text-slate-500">答錯題數</div>
+              <div class="text-base font-bold text-rose-600" id="res-wrong-count">0 / 25</div>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="text-xs text-slate-500">耗時</div>
+              <div class="text-base font-bold text-slate-700" id="res-time-cost">00:00</div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center space-x-3 pt-2 no-print">
+            <button onclick="window.print()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center space-x-1">
+              <i class="fa-solid fa-print"></i>
+              <span>列印 / 存為 PDF</span>
+            </button>
+            <button onclick="app.resetToHome()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition flex items-center space-x-1">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>返回首頁</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item-by-Item Review -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <h3 class="text-lg font-bold text-slate-900 flex items-center">
+            <i class="fa-solid fa-list-check text-blue-600 mr-2"></i>
+            試題標準答案與選擇對照
+          </h3>
+          <span class="text-xs text-slate-500">綠色表示正確 / 紅色表示劃錯</span>
+        </div>
+
+        <div id="result-review-list" class="space-y-6">
+          <!-- Dynamically populated review cards -->
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: TEACHER / ADMIN DASHBOARD -->
+    <div id="view-admin" class="hidden space-y-6">
+      <!-- Admin Header Banner -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="bg-blue-500/30 text-blue-200 px-2.5 py-0.5 rounded text-xs font-semibold border border-blue-400/30">教師管理後台</span>
+            <h2 class="text-xl font-bold">學生答題統計與試題分析儀表板</h2>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">即時統計學生交卷分數、班級平均與 25 題全體錯誤率分佈</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="app.exportToCSV()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition shadow flex items-center space-x-1.5">
+            <i class="fa-solid fa-file-excel"></i>
+            <span>匯出全班成績單 (CSV)</span>
+          </button>
+          <button onclick="app.refreshSubmissions()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition border border-slate-700 flex items-center space-x-1.5">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>重新整理數據</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">已交卷學生數</div>
+          <div class="text-2xl font-black text-slate-900 mt-1" id="admin-kpi-count">0 人</div>
+          <div class="text-xs text-slate-400 mt-1">即時動態統計</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">全班平均分數</div>
+          <div class="text-2xl font-black text-blue-600 mt-1" id="admin-kpi-avg">0.0 分</div>
+          <div class="text-xs text-slate-400 mt-1">滿分 100 分</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">最高分 / 最低分</div>
+          <div class="text-2xl font-black text-emerald-600 mt-1" id="admin-kpi-range">0 / 0</div>
+          <div class="text-xs text-slate-400 mt-1">全班分數區間</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500">及格率 (≥60分)</div>
+          <div class="text-2xl font-black text-amber-600 mt-1" id="admin-kpi-pass">0%</div>
+          <div class="text-xs text-slate-400 mt-1">標準門檻比例</div>
+        </div>
+      </div>
+
+      <!-- Analytics Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Chart 1: Score Distribution -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+            <span>全班分數級距分佈圖 (Score Distribution)</span>
+            <i class="fa-solid fa-chart-column text-slate-400"></i>
+          </h3>
+          <div class="h-64 relative">
+            <canvas id="chart-score-dist"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Item Error Rate Analysis -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+          <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+            <span>25 題單題錯誤率分析 (%) (Item Difficulty)</span>
+            <i class="fa-solid fa-chart-bar text-slate-400"></i>
+          </h3>
+          <div class="h-64 relative">
+            <canvas id="chart-error-rate"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Gradebook Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 class="text-base font-bold text-slate-900 flex items-center">
+            <i class="fa-solid fa-users text-blue-600 mr-2"></i>
+            學生交卷名冊與分數細項
+          </h3>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="admin-search-input" oninput="app.renderAdminTable()" placeholder="搜尋姓名或學號..." class="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-48">
+            <select id="admin-sort-select" onchange="app.renderAdminTable()" class="px-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="time-desc">最新繳交時間</option>
+              <option value="score-desc">成績由高到低</option>
+              <option value="score-asc">成績由低到高</option>
+              <option value="id-asc">學號升冪</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 font-semibold uppercase tracking-wider border-y border-slate-200">
+              <tr>
+                <th class="py-3 px-4">學號</th>
+                <th class="py-3 px-4">姓名</th>
+                <th class="py-3 px-4">測驗得分</th>
+                <th class="py-3 px-4">答對 / 答錯</th>
+                <th class="py-3 px-4">繳交時間</th>
+                <th class="py-3 px-4 text-center">檢視答題</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body" class="divide-y divide-slate-100">
+              <!-- Inserted dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL 1: Teacher Auth Prompt -->
+  <div id="modal-admin-auth" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="text-center">
+        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+          <i class="fa-solid fa-lock text-xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900">教師後台密碼驗證</h3>
+        <p class="text-xs text-slate-500 mt-1">預設密碼為：<code class="bg-slate-100 px-1 py-0.5 rounded font-mono text-blue-600">admin888</code></p>
+      </div>
+      <div>
+        <input type="password" id="input-admin-pass" placeholder="請輸入教師密碼" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <p id="admin-pass-error" class="text-xs text-rose-600 mt-1 hidden">密碼錯誤，請重新輸入！</p>
+      </div>
+      <div class="flex items-center space-x-2 pt-2">
+        <button onclick="app.closeAdminModal()" class="w-1/2 py-2 rounded-xl border border-slate-300 text-slate-600 text-xs font-semibold">取消</button>
+        <button onclick="app.verifyAdminPass()" class="w-1/2 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold">進入後台</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Custom Confirmation Dialog -->
+  <div id="modal-confirm" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 text-center">
+      <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto">
+        <i class="fa-solid fa-circle-question text-2xl"></i>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900" id="confirm-title">確認交卷？</h3>
+      <p class="text-xs text-slate-500" id="confirm-msg">您尚有題目未作答，確定要現在提交嗎？</p>
+      <div class="flex items-center space-x-2 pt-2">
+        <button id="confirm-cancel-btn" class="w-1/2 py-2 rounded-xl border border-slate-300 text-slate-600 text-xs font-semibold">繼續作答</button>
+        <button id="confirm-ok-btn" class="w-1/2 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold">確認提交</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Student Detail Inspector -->
+  <div id="modal-student-detail" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl">
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-900 text-sm" id="modal-detail-title">學生作答明細卡</h3>
+        <button onclick="document.getElementById('modal-student-detail').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4" id="modal-detail-body">
+        <!-- Dynamically injected student choices -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- Firebase Integration & Core App Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // --- 1. 115年公務人員普通考試 政治學概要 25題完整題庫與標準答案 ---
+    const QUESTIONS = [
+      {
+        id: 1,
+        title: "有學者認為「人類是衝動的，容易受到迷思與刻板印象所控制，政治只是圖騰的操作而已」。該敘述是採何種觀點來解釋政治權力？",
+        options: ["(A) 物理的", "(B) 理性的", "(C) 倫理的", "(D) 非理性的"],
+        correct: 3, // D
+        explanation: "非理性觀點強調心理、情緒、迷思與刻板印象對政治行為的支配力，認為政治權力的展現常透過象徵與圖騰操弄。"
+      },
+      {
+        id: 2,
+        title: "下列何者不是杭廷頓（Huntington）關於現代文明區的分類？",
+        options: ["(A) 日本文明區", "(B) 大洋洲文明區", "(C) 伊斯蘭文明區", "(D) 拉丁美洲文明區"],
+        correct: 1, // B
+        explanation: "杭廷頓在《文明衝突論》中提出了中華、日本、印度、伊斯蘭、西方、拉丁美洲、非洲、東正教等文明區，分類中並無「大洋洲文明區」。"
+      },
+      {
+        id: 3,
+        title: "對於量化研究方法的敘述，下列何者錯誤？",
+        options: ["(A) 可以深入理解個案的意義", "(B) 可以分析大量個案", "(C) 可以找出一般化的趨勢", "(D) 可以釐清變項之間的關係"],
+        correct: 0, // A
+        explanation: "深入理解單一或少數個案的脈絡與主觀意義是「質化研究（如深訪、個案研究）」的優勢，量化研究偏向巨觀與統計推論。"
+      },
+      {
+        id: 4,
+        title: "我國行憲迄今多年，下列何者不是我國總統一職的特徵？",
+        options: [
+          "(A) 我國在民國83年修憲後的總統任期4年、連選得連任一次",
+          "(B) 我國遷臺後的總統選舉曾仿效美國選舉人團的方式選出總統",
+          "(C) 當總統無法行使職權時，由副總統代行職權",
+          "(D) 我國總統的解職方式可包括罷免、彈劾與自行辭職"
+        ],
+        correct: 1, // B
+        explanation: "我國過往國民大會代為選舉總統係屬代議間接選舉，並非美式的「選舉人團（Electoral College）」制度。"
+      },
+      {
+        id: 5,
+        title: "下列那個民族至今未曾獨立成國家？",
+        options: ["(A) 盎格魯薩克遜族", "(B) 庫德族", "(C) 日耳曼族", "(D) 突厥族"],
+        correct: 1, // B
+        explanation: "庫德族（Kurds）分布於土耳其、伊拉克、伊朗與敘利亞邊境，是全球目前人口最多卻無獨立國家的無國籍民族。"
+      },
+      {
+        id: 6,
+        title: "對君主國與共和國的敘述，下列何者正確？",
+        options: [
+          "(A) 目前世界上多數國家是共和制",
+          "(B) 共和國是指國家元首為世襲制",
+          "(C) 共和國國家元首必定是君主",
+          "(D) 君主國中的元首均具有實權"
+        ],
+        correct: 0, // A
+        explanation: "當代全球絕大多數國家皆採用共和體制（元首非世襲）；而許多現代君主立憲國（如英、日）元首並無實權。"
+      },
+      {
+        id: 7,
+        title: "關於色情出版品所涉及的基本自由權利，不包括下列何者？",
+        options: ["(A) 出版自由", "(B) 身體自由", "(C) 居住自由", "(D) 工作自由"],
+        correct: 2, // C
+        explanation: "色情出版品之爭議與出版自由、言論自由、工作權及身體自主相關，與憲法保障之居住遷徙自由無直接關聯。"
+      },
+      {
+        id: 8,
+        title: "對於現代自由主義（modern liberalism）的敘述，下列何者錯誤？",
+        options: [
+          "(A) 源自於工業資本主義所造成的不平等",
+          "(B) 主張小而美的政府",
+          "(C) 認為政府應該提供適度的社會福利",
+          "(D) 經濟上可接受凱因斯主義"
+        ],
+        correct: 1, // B
+        explanation: "主張「小而美/夜警國家」的是古典自由主義（Classical Liberalism）。現代自由主義（福利自由主義）主張政府應積極介入消除貧富不均。"
+      },
+      {
+        id: 9,
+        title: "民意代表既然受到選民的信任，就應該在其職位上自行運用其判斷能力，追求選民的真實利益。該敘述屬於那一種代議政治的模式？",
+        options: ["(A) 全權委託說（trustee model）", "(B) 委任說（delegate model）", "(C) 託付說（mandate model）", "(D) 反映說（resemblance model）"],
+        correct: 0, // A
+        explanation: "伯克（Edmund Burke）提出的全權委託模型（Trustee Model）主張民代應憑藉良知與獨立判斷力為選民整體利益決策。"
+      },
+      {
+        id: 10,
+        title: "阿蒙（Almond）與佛巴（Verba）區分的政治文化之類型，下列何者不在其中？",
+        options: ["(A) 地方型", "(B) 臣屬型", "(C) 傳統型", "(D) 參與型"],
+        correct: 2, // C
+        explanation: "Almond & Verba 在《公民文化》中將政治文化劃分為三分法：地方型（Parochial）、臣屬型（Subject）與參與型（Participant）。"
+      },
+      {
+        id: 11,
+        title: "下列何者不是道爾（Dahl）提出的民主政體的條件？",
+        options: ["(A) 普遍選舉權", "(B) 選舉過程自由且公平", "(C) 言論自由", "(D) 政府問責制"],
+        correct: 3, // D
+        explanation: "羅伯特·道爾（Robert Dahl）多元政體（Polyarchy）的 7 項標準包含普選權、競選公職權、自由公平選舉、言論自由、多元資訊管道、結社自由等。"
+      },
+      {
+        id: 12,
+        title: "衡量政治發展時，政治結構的專業化所指為何？",
+        options: [
+          "(A) 大多數權力集中在中央政府，人民同意政府有權分配公共價值",
+          "(B) 個人主動承擔政治角色，並參與政治過程",
+          "(C) 多數重要的政治功能交由有組織的政治制度執行",
+          "(D) 政治系統能夠回應要求和取得支持"
+        ],
+        correct: 2, // C
+        explanation: "政治結構專業化（Structural Differentiation）意指政治體系內的各項特定功能由專門、專責且有組織的政治機構分工執行。"
+      },
+      {
+        id: 13,
+        title: "下列何者是我國憲法規定的參政權？",
+        options: ["(A) 請願", "(B) 結社", "(C) 彈劾", "(D) 創制"],
+        correct: 3, // D
+        explanation: "我國憲法第 17 條規定人民有選舉、罷免、創制、複決之權（參政權）。請願訴願為受益權；結社為自由權。"
+      },
+      {
+        id: 14,
+        title: "目前我國現行憲法，有關覆議案的規定，下列敘述何者正確？",
+        options: [
+          "(A) 立法院須經出席立委2/3才能維持原案",
+          "(B) 立法院須經出席立委1/2才能維持原案",
+          "(C) 立法院須經全體立委1/2才能維持原案",
+          "(D) 立法院須經全體立委2/3才能維持原案"
+        ],
+        correct: 2, // C
+        explanation: "依憲法增修條文第 3 條，行政院移請立法院覆議時，立法院經全體立法委員 1/2 以上贊成，即維持原案。"
+      },
+      {
+        id: 15,
+        title: "有關我國政府體制，下列敘述何者錯誤？",
+        options: [
+          "(A) 行政院院長由總統提名任命",
+          "(B) 行政院院長對立法院負責",
+          "(C) 立法院可對行政院院長提不信任案",
+          "(D) 行政院院長可於倒閣後解散立法院"
+        ],
+        correct: 3, // D
+        explanation: "倒閣後係由「行政院院長呈請總統解散立法院」，並非由行政院院長直接解散立法院。"
+      },
+      {
+        id: 16,
+        title: "在美國總統制中，下列何者不是國會對總統制衡的權力？",
+        options: ["(A) 赦免權", "(B) 宣戰權", "(C) 人事同意權", "(D) 覆議權"],
+        correct: 0, // A
+        explanation: "特赦權（Pardon Power）是美國總統憲法賦予專屬的行政職權，並非國會制衡總統的手段。"
+      },
+      {
+        id: 17,
+        title: "關於我國憲法目前對大法官的規定，下列何者錯誤？",
+        options: [
+          "(A) 大法官人選是由總統提名，經立法院同意任命",
+          "(B) 任期8年，得連任一次",
+          "(C) 擔任司法院院長、副院長之大法官，不受任期保障",
+          "(D) 解釋憲法和政黨違憲解散之審理等，皆屬大法官職權"
+        ],
+        correct: 1, // B
+        explanation: "憲法增修條文第 5 條規定，司法院大法官任期 8 年，不分屆次，個別計算，且「不得連任」。"
+      },
+      {
+        id: 18,
+        title: "依據法律來源的劃分，若按遵循先例原則（stare decisis）的法律，意指下列何者？",
+        options: ["(A) 普通法", "(B) 制定法", "(C) 自然法", "(D) 上位法"],
+        correct: 0, // A
+        explanation: "英美法系（普通法 Common Law）的核心原則即為「遵循先例原則（Stare Decisis）」，以法官判例為主要法律淵源。"
+      },
+      {
+        id: 19,
+        title: "下列何者不是用來形容文官體制特性？",
+        options: ["(A) 永業化", "(B) 委任制", "(C) 科層制", "(D) 功績制"],
+        correct: 1, // B
+        explanation: "常任文官體制強調永業化（Tenure）、功績制（Merit）與韋伯式科層制（Bureaucracy）；「委任制/分贓制」屬於早期非專業文官體制特徵。"
+      },
+      {
+        id: 20,
+        title: "甲國國會議員選舉實施比例代表制，選舉門檻為3%，共有5個政黨（A:40%, B:30%, C:20%, D:8%, E:2%），甲國共有100席，A黨可得多少席次（四捨五入）？",
+        options: ["(A) 40席", "(B) 41席", "(C) 39席", "(D) 42席"],
+        correct: 1, // B
+        explanation: "E黨未達3%門檻不參與分配。有效票比例總計 40+30+20+8 = 98%。A黨分配比例為 40/98 × 100 = 40.816 席，四捨五入為 41 席。"
+      },
+      {
+        id: 21,
+        title: "下列何者不是密西根學派（Michigan Model）所指影響選民投票行為的三大因素？",
+        options: ["(A) 政黨認同", "(B) 政策議題", "(C) 社會階級", "(D) 候選人取向"],
+        correct: 2, // C
+        explanation: "密西根學派漏斗模型三大核心變數為：政黨認同（Party ID）、候選人取向（Candidate Orientation）與議題取向（Issue Orientation）。"
+      },
+      {
+        id: 22,
+        title: "下列何者屬於非慣常的政治參與行為？",
+        options: ["(A) 登記參選", "(B) 選舉時為特定政黨助選", "(C) 向民意代表表達政策意見", "(D) 參與靜坐抗議"],
+        correct: 3, // D
+        explanation: "靜坐抗議、遊行、罷工屬於非慣常（Unconventional）政治參與；投票、助選、陳情則為體制內慣常性參與。"
+      },
+      {
+        id: 23,
+        title: "關於網路政治特性，下列何者正確？",
+        options: [
+          "(A) 網路政治所誘發的同溫層效應，對於推動審議式民主有益",
+          "(B) 網路中的匿名性能讓使用者在網路發言時深思熟慮，避免民粹式發言",
+          "(C) 網路政治崛起後，傳統媒體（電視、報紙、雜誌）的權威下降",
+          "(D) 臺灣網路政治崛起後，網路介面從來沒有成功動員過任何一場政治或社會運動"
+        ],
+        correct: 2, // C
+        explanation: "自媒體與網路社群崛起，大量消解了傳統權威媒體對資訊的壟斷性，使傳統媒體權威度下降。"
+      },
+      {
+        id: 24,
+        title: "下列何種民眾比較不會積極參與政治？",
+        options: ["(A) 該項事務攸關個人利益", "(B) 公民責任感高者", "(C) 政治效能感低者", "(D) 非常認同某些政黨或政治人物者"],
+        correct: 2, // C
+        explanation: "政治效能感（Political Efficacy）低者認為自身行動無法改變政府或政策，因此政治參與意願最為低落。"
+      },
+      {
+        id: 25,
+        title: "下列何項理論，主要以韓國和臺灣民主化之前為例，解釋國家的經濟成就？",
+        options: ["(A) 發展型國家理論", "(B) 現代化理論", "(C) 依賴理論", "(D) 世界體系理論"],
+        correct: 0, // A
+        explanation: "發展型國家理論（Developmental State Theory，如 Chalmers Johnson）特別用於解釋東亞（台韓）政府主導市場的經濟奇蹟。"
+      }
+    ];
+
+    // --- 2. STATE AND STORAGE MANAGEMENT ---
+    let db = null;
+    let auth = null;
+    let submissionsCache = [];
+
+    const state = {
+      studentName: '',
+      studentId: '',
+      userAnswers: Array(25).fill(null),
+      currentQuestionIdx: 0,
+      startTime: null,
+      timerInterval: null,
+      elapsedSeconds: 0,
+      isAdmin: false,
+      scoreDistChart: null,
+      errorRateChart: null
+    };
+
+    // Load Local Backup Storage if available
+    function loadLocalStorageSubmissions() {
+      try {
+        const localData = localStorage.getItem('ps_exam_submissions');
+        if (localData) {
+          submissionsCache = JSON.parse(localData);
+        }
+      } catch (e) {
+        console.warn("LocalStorage load error:", e);
+      }
+    }
+
+    function saveLocalStorageSubmission(sub) {
+      try {
+        submissionsCache.push(sub);
+        localStorage.setItem('ps_exam_submissions', JSON.stringify(submissionsCache));
+      } catch (e) {
+        console.warn("LocalStorage save error:", e);
+      }
+    }
+
+    // Initialize Firebase
+    async function initFirebase() {
+      loadLocalStorageSubmissions();
+      try {
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ps-ordinary-exam-app';
+        let config = null;
+        if (typeof __firebase_config !== 'undefined') {
+          config = JSON.parse(__firebase_config);
+        } else {
+          config = { apiKey: "demo", authDomain: "demo.firebaseapp.com", projectId: "demo-app" };
+        }
+
+        const app = initializeApp(config);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        setupSubmissionsListener(appId);
+      } catch (err) {
+        console.warn("Firebase running in offline fallback mode:", err);
+      }
+    }
+
+    function getCollectionPath() {
+      const appId = typeof __app_id !== 'undefined' ? __app_id : 'ps-ordinary-exam-app';
+      return collection(db, 'artifacts', appId, 'public', 'data', 'exam_submissions');
+    }
+
+    function setupSubmissionsListener() {
+      if (!db || !auth) return;
+      try {
+        const colRef = getCollectionPath();
+        onSnapshot(colRef, (snapshot) => {
+          const cloudSubs = [];
+          snapshot.forEach((docSnap) => {
+            cloudSubs.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          if (cloudSubs.length > 0) {
+            submissionsCache = cloudSubs;
+          }
+          if (state.isAdmin) {
+            renderAdminDashboard();
+          }
+        }, (error) => {
+          console.error("Firestore error:", error);
+        });
+      } catch (e) {
+        console.error("Listener error:", e);
+      }
+    }
+
+    // --- STREAMING_CHUNK:Attaching window app global method handlers... ---
+    // App Logic & Global Bindings
+    window.app = {
+      navToHome() {
+        if (state.timerInterval) clearInterval(state.timerInterval);
+        showView('view-login');
+      },
+
+      startQuiz(e) {
+        e.preventDefault();
+        const name = document.getElementById('input-student-name').value.trim();
+        const sid = document.getElementById('input-student-id').value.trim();
+
+        if (!name || !sid) {
+          showToast("請輸入姓名與學號！", "warning");
+          return;
+        }
+
+        state.studentName = name;
+        state.studentId = sid;
+        state.userAnswers = Array(25).fill(null);
+        state.currentQuestionIdx = 0;
+        state.elapsedSeconds = 0;
+        state.startTime = new Date();
+
+        document.getElementById('quiz-user-badge').innerHTML = `<i class="fa-solid fa-user-graduate mr-1"></i> ${name} (${sid})`;
+
+        if (state.timerInterval) clearInterval(state.timerInterval);
+        state.timerInterval = setInterval(() => {
+          state.elapsedSeconds++;
+          const mins = String(Math.floor(state.elapsedSeconds / 60)).padStart(2, '0');
+          const secs = String(state.elapsedSeconds % 60).padStart(2, '0');
+          document.getElementById('quiz-timer').innerText = `${mins}:${secs}`;
+        }, 1000);
+
+        app.renderQuestion();
+        app.renderPalette();
+        showView('view-quiz');
+      },
+
+      renderQuestion() {
+        const idx = state.currentQuestionIdx;
+        const q = QUESTIONS[idx];
+
+        document.getElementById('q-category').innerText = `題目 ${idx + 1} / 25`;
+        document.getElementById('q-title').innerText = q.title;
+
+        const answeredCount = state.userAnswers.filter(a => a !== null).length;
+        document.getElementById('quiz-answered-count').innerText = answeredCount;
+        document.getElementById('quiz-progress-bar').style.width = `${((idx + 1) / 25) * 100}%`;
+
+        const optionsContainer = document.getElementById('q-options');
+        optionsContainer.innerHTML = '';
+
+        q.options.forEach((optText, oIdx) => {
+          const isSelected = state.userAnswers[idx] === oIdx;
+          const optCard = document.createElement('div');
+          optCard.className = `p-4 rounded-xl border cursor-pointer transition flex items-start space-x-3 ${
+            isSelected 
+              ? 'bg-blue-50/80 border-blue-500 shadow-sm ring-1 ring-blue-500' 
+              : 'bg-slate-50 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+          }`;
+          optCard.onclick = () => app.selectOption(oIdx);
+
+          optCard.innerHTML = `
+            <div class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border flex items-center justify-center ${
+              isSelected ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300 bg-white'
+            }">
+              ${isSelected ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}
+            </div>
+            <span class="text-sm text-slate-800 leading-relaxed">${optText}</span>
+          `;
+          optionsContainer.appendChild(optCard);
+        });
+
+        document.getElementById('btn-prev-q').disabled = (idx === 0);
+        
+        const nextBtn = document.getElementById('btn-next-q');
+        if (idx === 24) {
+          nextBtn.innerHTML = `預覽完成概況 <i class="fa-solid fa-flag-checkered ml-1"></i>`;
+        } else {
+          nextBtn.innerHTML = `下一題 <i class="fa-solid fa-chevron-right ml-1"></i>`;
+        }
+
+        app.renderPalette();
+      },
+
+      selectOption(oIdx) {
+        state.userAnswers[state.currentQuestionIdx] = oIdx;
+        app.renderQuestion();
+      },
+
+      prevQuestion() {
+        if (state.currentQuestionIdx > 0) {
+          state.currentQuestionIdx--;
+          app.renderQuestion();
+        }
+      },
+
+      nextQuestion() {
+        if (state.currentQuestionIdx < 24) {
+          state.currentQuestionIdx++;
+          app.renderQuestion();
+        } else {
+          app.confirmSubmitQuiz();
+        }
+      },
+
+      jumpToQuestion(idx) {
+        state.currentQuestionIdx = idx;
+        app.renderQuestion();
+      },
+
+      renderPalette() {
+        const palette = document.getElementById('question-palette');
+        palette.innerHTML = '';
+        for (let i = 0; i < 25; i++) {
+          const isCurrent = state.currentQuestionIdx === i;
+          const isAnswered = state.userAnswers[i] !== null;
+
+          const btn = document.createElement('button');
+          let bgClass = "bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200";
+          if (isCurrent) {
+            bgClass = "bg-blue-600 border-blue-600 text-white font-bold ring-2 ring-blue-300";
+          } else if (isAnswered) {
+            bgClass = "bg-emerald-100 border-emerald-300 text-emerald-800 font-semibold";
+          }
+
+          btn.className = `w-full py-1.5 rounded-lg text-xs border transition ${bgClass}`;
+          btn.innerText = i + 1;
+          btn.onclick = () => app.jumpToQuestion(i);
+          palette.appendChild(btn);
+        }
+      },
+
+      confirmSubmitQuiz() {
+        const unanswered = state.userAnswers.filter(a => a === null).length;
+        const confirmModal = document.getElementById('modal-confirm');
+        const titleEl = document.getElementById('confirm-title');
+        const msgEl = document.getElementById('confirm-msg');
+        const okBtn = document.getElementById('confirm-ok-btn');
+        const cancelBtn = document.getElementById('confirm-cancel-btn');
+
+        if (unanswered > 0) {
+          titleEl.innerText = "尚未完成全部題目";
+          msgEl.innerText = `您還有 ${unanswered} 題尚未回答，確定要直接提交嗎？`;
+        } else {
+          titleEl.innerText = "確認交卷？";
+          msgEl.innerText = "交卷後將無法修改答案，系統將為您計算分數與試題對照。";
+        }
+
+        cancelBtn.onclick = () => confirmModal.classList.add('hidden');
+        okBtn.onclick = () => {
+          confirmModal.classList.add('hidden');
+          app.submitQuiz();
+        };
+
+        confirmModal.classList.remove('hidden');
+      },
+
+      async submitQuiz() {
+        if (state.timerInterval) clearInterval(state.timerInterval);
+
+        let correctCount = 0;
+        QUESTIONS.forEach((q, idx) => {
+          if (state.userAnswers[idx] === q.correct) {
+            correctCount++;
+          }
+        });
+        const score = correctCount * 4; // 25 questions * 4 = 100
+
+        const submission = {
+          studentName: state.studentName,
+          studentId: state.studentId,
+          score: score,
+          correctCount: correctCount,
+          wrongCount: 25 - correctCount,
+          answers: state.userAnswers,
+          elapsedSeconds: state.elapsedSeconds,
+          timestamp: new Date().toISOString()
+        };
+
+        if (db && auth?.currentUser) {
+          try {
+            const colRef = getCollectionPath();
+            const docRef = doc(colRef, `${state.studentId}_${Date.now()}`);
+            await setDoc(docRef, submission);
+          } catch (e) {
+            console.error("Cloud saving failed, saving locally:", e);
+          }
+        }
+
+        saveLocalStorageSubmission(submission);
+
+        document.getElementById('res-score-number').innerText = score;
+        document.getElementById('res-student-heading').innerText = `${state.studentName} (${state.studentId}) 得分：${score} 分`;
+        document.getElementById('res-correct-count').innerText = `${correctCount} / 25`;
+        document.getElementById('res-wrong-count').innerText = `${25 - correctCount} / 25`;
+        
+        const mins = String(Math.floor(state.elapsedSeconds / 60)).padStart(2, '0');
+        const secs = String(state.elapsedSeconds % 60).padStart(2, '0');
+        document.getElementById('res-time-cost').innerText = `${mins}:${secs}`;
+
+        renderDetailedReview();
+        showView('view-result');
+      },
+
+      resetToHome() {
+        showView('view-login');
+      },
+
+      // --- ADMIN BACKEND HANDLERS ---
+      toggleAdminModal() {
+        if (state.isAdmin) {
+          showView('view-admin');
+          renderAdminDashboard();
+        } else {
+          document.getElementById('input-admin-pass').value = '';
+          document.getElementById('admin-pass-error').classList.add('hidden');
+          document.getElementById('modal-admin-auth').classList.remove('hidden');
+        }
+      },
+
+      closeAdminModal() {
+        document.getElementById('modal-admin-auth').classList.add('hidden');
+      },
+
+      verifyAdminPass() {
+        const pass = document.getElementById('input-admin-pass').value;
+        if (pass === 'admin888' || pass === 'admin') {
+          state.isAdmin = true;
+          document.getElementById('modal-admin-auth').classList.add('hidden');
+          showView('view-admin');
+          renderAdminDashboard();
+          showToast("已成功進入教師管理後台");
+        } else {
+          document.getElementById('admin-pass-error').classList.remove('hidden');
+        }
+      },
+
+      refreshSubmissions() {
+        renderAdminDashboard();
+        showToast("已更新最新統計數據");
+      },
+
+      renderAdminTable() {
+        const tbody = document.getElementById('admin-table-body');
+        tbody.innerHTML = '';
+
+        const searchTerm = document.getElementById('admin-search-input').value.toLowerCase().trim();
+        const sortBy = document.getElementById('admin-sort-select').value;
+
+        let filtered = submissionsCache.filter(s => 
+          (s.studentName && s.studentName.toLowerCase().includes(searchTerm)) ||
+          (s.studentId && s.studentId.toLowerCase().includes(searchTerm))
+        );
+
+        filtered.sort((a, b) => {
+          if (sortBy === 'score-desc') return b.score - a.score;
+          if (sortBy === 'score-asc') return a.score - b.score;
+          if (sortBy === 'id-asc') return String(a.studentId).localeCompare(String(b.studentId));
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        });
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="py-8 text-center text-slate-400">目前尚無符合條件的交卷紀錄</td>
+            </tr>
+          `;
+          return;
+        }
+
+        filtered.forEach((sub) => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition";
+          
+          const timeStr = new Date(sub.timestamp).toLocaleString('zh-TW', { hour12: false });
+          const scoreColor = sub.score >= 60 ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold';
+
+          tr.innerHTML = `
+            <td class="py-3 px-4 font-mono">${sub.studentId}</td>
+            <td class="py-3 px-4 font-medium text-slate-900">${sub.studentName}</td>
+            <td class="py-3 px-4 ${scoreColor}">${sub.score} 分</td>
+            <td class="py-3 px-4">
+              <span class="text-emerald-600 font-semibold">${sub.correctCount || 0}</span> / 
+              <span class="text-rose-600">${sub.wrongCount || 0}</span>
+            </td>
+            <td class="py-3 px-4 text-slate-400 text-[11px]">${timeStr}</td>
+            <td class="py-3 px-4 text-center">
+              <button onclick="app.inspectStudentDetail('${sub.studentId}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-md text-xs font-semibold">
+                檢視明細
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      },
+
+      inspectStudentDetail(sid) {
+        const sub = submissionsCache.find(s => s.studentId === sid);
+        if (!sub) return;
+
+        document.getElementById('modal-detail-title').innerText = `${sub.studentName} (${sub.studentId}) 作答明細 - 得分：${sub.score}分`;
+        const body = document.getElementById('modal-detail-body');
+        body.innerHTML = '';
+
+        QUESTIONS.forEach((q, idx) => {
+          const userAns = sub.answers[idx];
+          const isCorrect = userAns === q.correct;
+
+          const card = document.createElement('div');
+          card.className = `p-3.5 rounded-xl border text-xs space-y-1.5 ${isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'}`;
+          
+          card.innerHTML = `
+            <div class="flex items-center justify-between font-bold">
+              <span>第 ${idx + 1} 題: ${q.title}</span>
+              <span class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}">${isCorrect ? '✓ 答對 (+4分)' : '✗ 答錯'}</span>
+            </div>
+            <div class="text-slate-600">
+              <strong>學生選擇：</strong> ${userAns !== null ? q.options[userAns] : '未作答'}
+            </div>
+            ${!isCorrect ? `<div class="text-emerald-700 font-semibold"><strong>標準答案：</strong> ${q.options[q.correct]}</div>` : ''}
+          `;
+          body.appendChild(card);
+        });
+
+        document.getElementById('modal-student-detail').classList.remove('hidden');
+      },
+
+      exportToCSV() {
+        if (submissionsCache.length === 0) {
+          showToast("目前無紀錄可供匯出！", "warning");
+          return;
+        }
+
+        let csvContent = "\uFEFF學號,姓名,得分,答對題數,答錯題數,作答秒數,提交時間\n";
+        submissionsCache.forEach(s => {
+          const timeStr = new Date(s.timestamp).toLocaleString('zh-TW', { hour12: false }).replace(/,/g, '');
+          csvContent += `"${s.studentId}","${s.studentName}",${s.score},${s.correctCount},${s.wrongCount},${s.elapsedSeconds},"${timeStr}"\n`;
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `115普考政治學概要測驗成績單_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast("已匯出全班成績單 CSV 檔");
+      }
+    };
+
+    // Helper: View Switcher
+    function showView(viewId) {
+      ['view-login', 'view-quiz', 'view-result', 'view-admin'].forEach(id => {
+        const el = document.getElementById(id);
+        if (id === viewId) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderDetailedReview() {
+      const list = document.getElementById('result-review-list');
+      list.innerHTML = '';
+
+      QUESTIONS.forEach((q, idx) => {
+        const userAns = state.userAnswers[idx];
+        const isCorrect = userAns === q.correct;
+
+        const itemCard = document.createElement('div');
+        itemCard.className = `p-5 rounded-2xl border space-y-3 ${
+          isCorrect ? 'bg-emerald-50/30 border-emerald-200' : 'bg-rose-50/30 border-rose-200'
+        }`;
+
+        itemCard.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <h4 class="text-sm font-bold text-slate-900 leading-snug">
+              <span class="text-blue-600 mr-1">Q${idx + 1}.</span> ${q.title}
+            </h4>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold flex-shrink-0 ${
+              isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
+            }">
+              ${isCorrect ? '<i class="fa-solid fa-check mr-1"></i>答對 (+4分)' : '<i class="fa-solid fa-xmark mr-1"></i>答錯'}
+            </span>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            ${q.options.map((opt, oIdx) => {
+              let optStyle = "text-slate-600 bg-white border-slate-200";
+              let badge = "";
+
+              if (oIdx === q.correct) {
+                optStyle = "text-emerald-800 bg-emerald-100/80 border-emerald-300 font-bold";
+                badge = `<span class="ml-2 text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded">標準答案</span>`;
+              }
+              if (oIdx === userAns && !isCorrect) {
+                optStyle = "text-rose-800 bg-rose-100/80 border-rose-300 font-bold line-through";
+                badge = `<span class="ml-2 text-[10px] bg-rose-600 text-white px-1.5 py-0.5 rounded">您的回答</span>`;
+              } else if (oIdx === userAns && isCorrect) {
+                badge = `<span class="ml-2 text-[10px] bg-emerald-600 text-white px-1.5 py-0.5 rounded">您的回答</span>`;
+              }
+
+              return `<div class="p-2.5 rounded-lg border ${optStyle} flex items-center justify-between">
+                <span>${opt}</span>
+                ${badge}
+              </div>`;
+            }).join('')}
+          </div>
+
+          <div class="bg-blue-50/80 rounded-xl p-3.5 border border-blue-100 text-xs text-blue-950 space-y-1 mt-2">
+            <div class="font-bold text-blue-900 flex items-center">
+              <i class="fa-solid fa-lightbulb text-amber-500 mr-1.5"></i> 考題解析與研析：
+            </div>
+            <p class="leading-relaxed text-slate-700">${q.explanation}</p>
+          </div>
+        `;
+
+        list.appendChild(itemCard);
+      });
+    }
+
+    function renderAdminDashboard() {
+      const count = submissionsCache.length;
+      document.getElementById('admin-kpi-count').innerText = `${count} 人`;
+
+      if (count === 0) {
+        document.getElementById('admin-kpi-avg').innerText = '0.0 分';
+        document.getElementById('admin-kpi-range').innerText = '0 / 0';
+        document.getElementById('admin-kpi-pass').innerText = '0%';
+        app.renderAdminTable();
+        return;
+      }
+
+      const scores = submissionsCache.map(s => s.score);
+      const avg = (scores.reduce((a, b) => a + b, 0) / count).toFixed(1);
+      const maxScore = Math.max(...scores);
+      const minScore = Math.min(...scores);
+      const passCount = scores.filter(s => s >= 60).length;
+      const passRate = ((passCount / count) * 100).toFixed(0);
+
+      document.getElementById('admin-kpi-avg').innerText = `${avg} 分`;
+      document.getElementById('admin-kpi-range').innerText = `${maxScore} / ${minScore}`;
+      document.getElementById('admin-kpi-pass').innerText = `${passRate}%`;
+
+      renderCharts();
+      app.renderAdminTable();
+    }
+
+    function renderCharts() {
+      const dist = [0, 0, 0, 0, 0]; // <60, 60-69, 70-79, 80-89, 90-100
+      submissionsCache.forEach(s => {
+        if (s.score < 60) dist[0]++;
+        else if (s.score < 70) dist[1]++;
+        else if (s.score < 80) dist[2]++;
+        else if (s.score < 90) dist[3]++;
+        else dist[4]++;
+      });
+
+      const errorCounts = Array(25).fill(0);
+      submissionsCache.forEach(s => {
+        if (s.answers) {
+          s.answers.forEach((ans, idx) => {
+            if (ans !== QUESTIONS[idx].correct) {
+              errorCounts[idx]++;
+            }
+          });
+        }
+      });
+      const errorRates = errorCounts.map(c => Math.round((c / (submissionsCache.length || 1)) * 100));
+
+      // Chart 1: Score Distribution
+      const ctx1 = document.getElementById('chart-score-dist').getContext('2d');
+      if (state.scoreDistChart) state.scoreDistChart.destroy();
+      state.scoreDistChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: ['<60分', '60-69分', '70-79分', '80-89分', '90-100分'],
+          datasets: [{
+            label: '人數',
+            data: dist,
+            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+            borderColor: 'rgb(37, 99, 235)',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+      });
+
+      // Chart 2: Item Error Rate
+      const ctx2 = document.getElementById('chart-error-rate').getContext('2d');
+      if (state.errorRateChart) state.errorRateChart.destroy();
+      state.errorRateChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: QUESTIONS.map((_, i) => `Q${i+1}`),
+          datasets: [{
+            label: '答錯率 (%)',
+            data: errorRates,
+            backgroundColor: 'rgba(244, 63, 94, 0.7)',
+            borderColor: 'rgb(225, 29, 72)',
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      });
+    }
+
+    function showToast(message, type = "info") {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `px-4 py-2.5 rounded-xl shadow-lg text-xs font-semibold text-white transition-all transform duration-300 pointer-events-auto flex items-center space-x-2 ${
+        type === 'warning' ? 'bg-amber-600' : 'bg-slate-900'
+      }`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initFirebase();
+    });
+  </script>
+</body>
+</html>
